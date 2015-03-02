@@ -14,11 +14,11 @@ import (
     "github.com/gorilla/sessions"
     "github.com/gorilla/securecookie"
 
-    "github.com/njdup/settings"
-    //"github.com/njdup/utils"
-    //"github.com/njdup/users"
-    //"github.com/njdup/commands"
-    //"github.com/njdup/texts"
+    "github.com/njdup/serve/settings"
+    //"github.com/njdup/serve/utils"
+    //"github.com/njdup/serve/users"
+    //"github.com/njdup/serve/commands"
+    //"github.com/njdup/serve/texts"
 )
 
 // configureRoutes will eventually initialize all application and API routes
@@ -40,10 +40,9 @@ func main() {
     router := mux.NewRouter()
     // TODO: Check the security of this - using the generated random key should
     // be sufficient, but better safe than sorry
-    keyLen = settings.Security.SessionKeyLen
+    keyLen := settings.Security.SessionKeyLen
     sessionStore := sessions.NewCookieStore([]byte(securecookie.GenerateRandomKey(keyLen)))
     configureRoutes(router, sessionStore)
-    //router.HandleFunc("/", dummyFunc)
 
     http.Handle("/", router)
     fmt.Println("Listening on port " + settings.App.Port)
