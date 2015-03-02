@@ -13,7 +13,7 @@ var (
 
 // The App struct encapsulates overall application
 // settings
-type App struct {
+type AppConfig struct {
     Name     string
     Port     string
 }
@@ -25,8 +25,8 @@ type SecurityConfig struct {
 }
 
 // getConfig sets all needed application settings
-func getAppConfig() *App {
-    config := new(App)
+func getAppConfig() *AppConfig {
+    config := new(AppConfig)
 
     config.Name = "Serve"
     config.Port = ":8080"
@@ -36,7 +36,7 @@ func getAppConfig() *App {
 
 // getSecuritySettings returns a SecurityConfig struct
 // set with the desired settings
-func getSecuritySettings *SecurityConfig {
+func getSecurityConfig() *SecurityConfig {
     config := new(SecurityConfig)
     config.SessionKeyLen = 16
 
