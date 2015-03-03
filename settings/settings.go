@@ -9,6 +9,7 @@ import (
 var (
 	App      = getAppConfig()
 	Security = getSecurityConfig()
+	Database = getDbConfig()
 )
 
 // The App struct encapsulates overall application
@@ -22,6 +23,13 @@ type AppConfig struct {
 // specific to maintaining and establishing applications security
 type SecurityConfig struct {
 	SessionKeyLen int
+}
+
+// The DbConfig struct holds all relevant settings for the
+// application database
+type DbConfig struct {
+	Url  string
+	Name string
 }
 
 // getConfig sets all needed application settings
@@ -39,6 +47,15 @@ func getAppConfig() *AppConfig {
 func getSecurityConfig() *SecurityConfig {
 	config := new(SecurityConfig)
 	config.SessionKeyLen = 16
+
+	return config
+}
+
+// Returns a DbConfig struct with the correct desired settings
+func getDbConfig() *DbConfig {
+	config := new(DbConfig)
+	config.Url = "localhost"
+	config.Name = "serve-dev"
 
 	return config
 }
