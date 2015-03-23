@@ -27,7 +27,7 @@ type User struct {
 	Firstname    string `bson:"firstName" json:"firstName"`
 	Lastname     string `bson:"lastName" json:"lastName"`
 	Phonenumber  string `bson:"phoneNumber" json:"phoneNumber`
-	PasswordHash     string `bson:"password" json:"-"`
+	PasswordHash string `bson:"password" json:"-"`
 	PasswordSalt string `bson:"passwordSalt" json"-"`
 
 	// TODO: Add fields for passwords and handling of passwords
