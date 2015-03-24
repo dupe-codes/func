@@ -15,6 +15,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 
 	"github.com/njdup/serve/db"
+	"github.com/njdup/serve/utils/security"
 )
 
 // The User struct defines the database fields associated
@@ -28,11 +29,6 @@ type User struct {
 	Lastname     string `bson:"lastName" json:"lastName"`
 	Phonenumber  string `bson:"phoneNumber" json:"phoneNumber`
 	PasswordHash string `bson:"password" json:"-"`
-	PasswordSalt string `bson:"passwordSalt" json"-"`
-
-	// TODO: Add fields for passwords and handling of passwords
-	// Add usernames? @njdup: I think yes
-
 }
 
 var (
@@ -67,6 +63,23 @@ func (user *User) Save() error {
 	}
 
 	return db.ExecWithCol(CollectionName, insertQuery)
+}
+
+// Stores the given password for the user after hashing
+// Returns the error encountered while hashing the password if applicable,
+// otherwise nil is returned
+func (user *User) SetPassword(password string) error {
+    if !security.PasswordPolicy.PasswordValid(password) {
+        return errors.New("Given password is not acceptable")
+    }
+    var err error
+    user.PasswordHash, err = security.HashPassword(password)
+    return err
+}
+
+// Checks whether the given password matches the password for the user
+func (user *User) PasswordsMatch(givenPassword string) bool {
+    return security.ConfirmPassword(user.PasswordHash, givenPassword)
 }
 
 // Checks whether the required fields of a user object are set
