@@ -13,8 +13,10 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
+	"github.com/gorilla/context"
 
 	"github.com/njdup/serve/settings"
+	"github.com/njdup/serve/site"
 	//"github.com/njdup/serve/utils"
 	//"github.com/njdup/serve/users"
 	//"github.com/njdup/serve/commands"
@@ -28,7 +30,8 @@ import (
 func configureRoutes(router *mux.Router, sessionStore *sessions.CookieStore) {
 	// Example:
 	// users.InitializeRoutes(router, sessionStore)
-	router.HandleFunc("/", dummyFunc)
+	//router.HandleFunc("/", dummyFunc)
+	site.InitializeRoutes(router, sessionStore)
 }
 
 func dummyFunc(res http.ResponseWriter, req *http.Request) {
@@ -45,5 +48,5 @@ func main() {
 
 	http.Handle("/", router)
 	fmt.Println("Listening on port " + settings.App.Port)
-	http.ListenAndServe(settings.App.Port, nil)
+	http.ListenAndServe(settings.App.Port, context.ClearHandler(http.DefaultServeMux))
 }
