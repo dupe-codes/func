@@ -69,17 +69,17 @@ func (user *User) Save() error {
 // Returns the error encountered while hashing the password if applicable,
 // otherwise nil is returned
 func (user *User) SetPassword(password string) error {
-    if !security.PasswordPolicy.PasswordValid(password) {
-        return errors.New("Given password is not acceptable")
-    }
-    var err error
-    user.PasswordHash, err = security.HashPassword(password)
-    return err
+	if !security.PasswordPolicy.PasswordValid(password) {
+		return errors.New("Given password is not acceptable")
+	}
+	var err error
+	user.PasswordHash, err = security.HashPassword(password)
+	return err
 }
 
 // Checks whether the given password matches the password for the user
 func (user *User) PasswordsMatch(givenPassword string) bool {
-    return security.ConfirmPassword(user.PasswordHash, givenPassword)
+	return security.ConfirmPassword(user.PasswordHash, givenPassword)
 }
 
 // Checks whether the required fields of a user object are set

@@ -9,27 +9,27 @@ import (
 type passwordValidator func(string) bool
 
 type passwordPolicy struct {
-    Validations []passwordValidator
+	Validations []passwordValidator
 }
 
 // Runs all password validations on the given password
 // Returns true if all validations pass, false otherwise
 func (policy *passwordPolicy) PasswordValid(password string) bool {
-    for _, validator := range policy.Validations {
-        if !validator(password) {
-            return false
-        }
-    }
-    return true
+	for _, validator := range policy.Validations {
+		if !validator(password) {
+			return false
+		}
+	}
+	return true
 }
 
 var (
-    minimumLength = 6
-    PasswordPolicy = &passwordPolicy{
-        Validations: []passwordValidator{
-            meetsMinLength,
-        },
-    }
+	minimumLength  = 6
+	PasswordPolicy = &passwordPolicy{
+		Validations: []passwordValidator{
+			meetsMinLength,
+		},
+	}
 )
 
 /*
@@ -37,7 +37,7 @@ var (
  */
 
 func meetsMinLength(password string) bool {
-    return len(password) >= minimumLength
+	return len(password) >= minimumLength
 }
 
 /*

@@ -3,7 +3,7 @@
 package users
 
 import (
-    "fmt"
+	"fmt"
 	"os"
 	"testing"
 )
@@ -54,15 +54,15 @@ func TestUserCreation(t *testing.T) {
 
 // Test for adding and confirming passwords
 func TestPasswords(t *testing.T) {
-    testPasswords := []string{"password", "passwords", "123456", "supersecure"}
-    for _, password := range testPasswords {
-        if err := testUser.SetPassword(password); err != nil {
-            t.Error("Error encountered setting password ", password)
-        }
+	testPasswords := []string{"password", "passwords", "123456", "supersecure"}
+	for _, password := range testPasswords {
+		if err := testUser.SetPassword(password); err != nil {
+			t.Error("Error encountered setting password ", password)
+		}
 
-        fmt.Printf("Password hashed and stored as: %s\n", testUser.PasswordHash)
-        if !testUser.PasswordsMatch(password) {
-            t.Error("Error encountered confirming password ", password)
-        }
-    }
+		fmt.Printf("Password hashed and stored as: %s\n", testUser.PasswordHash)
+		if !testUser.PasswordsMatch(password) {
+			t.Error("Error encountered confirming password ", password)
+		}
+	}
 }
