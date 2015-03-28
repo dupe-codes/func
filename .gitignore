@@ -12,3 +12,6 @@
 
 # Ignore compiled project file
 serve
+
+# Ignore testing relics
+*.out

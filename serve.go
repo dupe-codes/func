@@ -10,10 +10,10 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
-	"github.com/gorilla/context"
 
 	"github.com/njdup/serve/settings"
 	"github.com/njdup/serve/site"
@@ -30,12 +30,7 @@ import (
 func configureRoutes(router *mux.Router, sessionStore *sessions.CookieStore) {
 	// Example:
 	// users.InitializeRoutes(router, sessionStore)
-	//router.HandleFunc("/", dummyFunc)
 	site.InitializeRoutes(router, sessionStore)
-}
-
-func dummyFunc(res http.ResponseWriter, req *http.Request) {
-	fmt.Fprintf(res, "Welcome to Serve!")
 }
 
 func main() {

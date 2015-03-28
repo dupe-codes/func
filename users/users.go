@@ -49,7 +49,6 @@ func (user *User) ToString() string {
 // Inserts the receiver User into the database
 // Returns an error if any are encountered, including
 // validation errors
-// TODO: Add validations lol
 func (user *User) Save() error {
 	if emptyFields := checkEmptyFields(user); len(emptyFields) != 0 {
 		invalid := strings.Join(emptyFields, " ")
@@ -57,12 +56,34 @@ func (user *User) Save() error {
 	}
 
 	insertQuery := func(col *mgo.Collection) error {
-		// TODO: Add in existence check for given phone number
+		nameCh := make(chan int)
+		go checkExistence(col, bson.M{"userName": user.Username}, nameCh)
+
+		phoneCh := make(chan int)
+		go checkExistence(col, bson.M{"phoneNumber": user.Phonenumber}, phoneCh)
+
+		if nameMatches := <-nameCh; nameMatches != 0 {
+			return errors.New("A user with the given username already exists")
+		}
+
+		if phoneMatches := <-phoneCh; phoneMatches != 0 {
+			return errors.New("A user with the given phone number already exists")
+		}
+
 		user.Inserted = time.Now()
 		return col.Insert(user) // Inserts the user, returning nil or an error
 	}
 
 	return db.ExecWithCol(CollectionName, insertQuery)
+}
+
+func checkExistence(col *mgo.Collection, query bson.M, ch chan int) {
+	count, err := col.Find(query).Limit(1).Count()
+	if err != nil {
+		ch <- -1 // TODO: Is there a better way to handle an error here?
+		return
+	}
+	ch <- count
 }
 
 // Stores the given password for the user after hashing

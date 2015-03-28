@@ -1,10 +1,7 @@
 // Global application settings go here
+// TODO: Look in to doing this with the Flags package
 
 package settings
-
-import (
-// nothing right now
-)
 
 var (
 	App      = getAppConfig()
