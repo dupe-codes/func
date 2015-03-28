@@ -6,7 +6,6 @@
 package users
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -16,6 +15,7 @@ import (
 
 	"github.com/njdup/serve/db"
 	"github.com/njdup/serve/utils/security"
+	"github.com/njdup/serve/utils/web"
 )
 
 // The User struct defines the database fields associated
@@ -52,7 +52,10 @@ func (user *User) ToString() string {
 func (user *User) Save() error {
 	if emptyFields := checkEmptyFields(user); len(emptyFields) != 0 {
 		invalid := strings.Join(emptyFields, " ")
-		return errors.New("The following fields cannot be empty: " + invalid)
+		return &web.InvalidFieldsError{
+			web.GeneralError{"The following fields cannot be empty: " + invalid},
+			emptyFields,
+		}
 	}
 
 	insertQuery := func(col *mgo.Collection) error {
@@ -62,11 +65,17 @@ func (user *User) Save() error {
 		go checkExistence(col, bson.M{"phoneNumber": user.Phonenumber}, phoneCh)
 
 		if nameMatches := <-nameCh; nameMatches != 0 {
-			return errors.New("A user with the given username already exists")
+			return &web.InvalidFieldsError{
+				web.GeneralError{"A user with the given username already exists"},
+				[]string{"Username"},
+			}
 		}
 
 		if phoneMatches := <-phoneCh; phoneMatches != 0 {
-			return errors.New("A user with the given phone number already exists")
+			return &web.InvalidFieldsError{
+				web.GeneralError{"A user with the given phonenumber already exists"},
+				[]string{"Phonenumber"},
+			}
 		}
 
 		user.Inserted = time.Now()
@@ -94,7 +103,10 @@ func checkExistence(col *mgo.Collection, query bson.M, ch chan int) {
 // otherwise nil is returned
 func (user *User) SetPassword(password string) error {
 	if !security.PasswordPolicy.PasswordValid(password) {
-		return errors.New("Given password is not acceptable")
+		return &web.InvalidFieldsError{
+			web.GeneralError{"Given password is not acceptable"},
+			[]string{"Password"},
+		}
 	}
 	var err error
 	user.PasswordHash, err = security.HashPassword(password)
