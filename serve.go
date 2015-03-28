@@ -18,7 +18,7 @@ import (
 	"github.com/njdup/serve/settings"
 	"github.com/njdup/serve/site"
 	//"github.com/njdup/serve/utils"
-	//"github.com/njdup/serve/users"
+	"github.com/njdup/serve/users"
 	//"github.com/njdup/serve/commands"
 	//"github.com/njdup/serve/texts"
 )
@@ -28,8 +28,7 @@ import (
 // All new components must export an InitializeRoutes func, which takes in
 // the app router and session store as params
 func configureRoutes(router *mux.Router, sessionStore *sessions.CookieStore) {
-	// Example:
-	// users.InitializeRoutes(router, sessionStore)
+	users.InitializeRoutes(router, sessionStore)
 	site.InitializeRoutes(router, sessionStore)
 }
 
