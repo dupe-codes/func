@@ -5,7 +5,6 @@ package site
 
 import (
 	"fmt"
-	"html/template"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -16,19 +15,32 @@ type Page struct {
 	Title string
 }
 
+// Test handler
+func AnotherPage(sessionStore *sessions.CookieStore) http.Handler {
+	return http.HandlerFunc(func(resp http.ResponseWriter, req *http.Request) {
+		page := &Page{Title: "Another page"}
+		RenderTemplate(resp, "test", page)
+	})
+}
+
+// Another test handler
+func SubdirPage(sessionStore *sessions.CookieStore) http.Handler {
+	return http.HandlerFunc(func(resp http.ResponseWriter, req *http.Request) {
+		page := &Page{Title: "subdir"}
+		RenderTemplate(resp, "subdir", page)
+	})
+}
+
 func HomePage(sessionStore *sessions.CookieStore) http.Handler {
 	return http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 		fmt.Printf("Serving up main page.\n\n\n")
 		page := &Page{Title: "Func"}
-		t, err := template.ParseFiles("./site/views/home.html") // TODO: Add path to templates as a project setting
-		if err != nil {
-			fmt.Fprintf(res, "Error!")
-			return
-		}
-		t.Execute(res, page)
+		RenderTemplate(res, "home", page)
 	})
 }
 
 func InitializeRoutes(router *mux.Router, sessionStore *sessions.CookieStore) {
 	router.Handle("/", HomePage(sessionStore)).Methods("GET")
+	router.Handle("/test", AnotherPage(sessionStore)).Methods("GET")
+	router.Handle("/test2", SubdirPage(sessionStore)).Methods("GET")
 }
