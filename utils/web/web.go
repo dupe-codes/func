@@ -14,6 +14,8 @@ type SessionedHandler func(http.ResponseWriter, *http.Request, *sessions.CookieS
 // Configures the given function to be used as a request handler func
 // This can be expanded to handle any shared logic between all handler funcs
 func ConfigureHandler(fn SessionedHandler, sessionStore *sessions.CookieStore) http.HandlerFunc {
+	// TODO: Add flag to require user is logged in to access the page?
+	// Otherwise, redirect
 	return func(resp http.ResponseWriter, req *http.Request) {
 		fn(resp, req, sessionStore)
 	}

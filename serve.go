@@ -17,10 +17,7 @@ import (
 
 	"github.com/njdup/serve/settings"
 	"github.com/njdup/serve/site"
-	//"github.com/njdup/serve/utils"
 	"github.com/njdup/serve/users"
-	//"github.com/njdup/serve/commands"
-	//"github.com/njdup/serve/texts"
 )
 
 // configureRoutes will eventually initialize all application and API routes
