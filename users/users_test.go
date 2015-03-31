@@ -4,6 +4,7 @@ package users
 
 import (
 	"os"
+	"reflect"
 	"testing"
 
 	"gopkg.in/mgo.v2"
@@ -16,6 +17,8 @@ import (
 // TODO: Add more test users, including malformed users
 var validUsers = []User{
 	{Username: "user", Firstname: "john", Lastname: "doe", Phonenumber: "+18889991234"},
+	{Username: "user2", Firstname: "jane", Lastname: "doe", Phonenumber: "+11111111111"},
+	{Username: "user3", Firstname: "Johann", Lastname: "Sebastian Bach", Phonenumber: "+1800OLDDUDE"},
 }
 
 var invalidUsers = []User{
@@ -65,6 +68,7 @@ func TestUserCreation(t *testing.T) {
 	for _, user := range invalidUsers {
 		if err := user.Save(); err == nil {
 			t.Error("Error not returned for invalid user: ", user.ToString())
+			removeUser(user)
 		}
 	}
 }
@@ -83,5 +87,52 @@ func TestPasswords(t *testing.T) {
 		if !testUser.PasswordsMatch(password) {
 			t.Error("Error encountered confirming password ", password)
 		}
+	}
+}
+
+// Ensures that querying for users behaves correctly
+func TestFindingUsers(t *testing.T) {
+	for _, user := range validUsers {
+		if err := user.Save(); err != nil {
+			t.Fatal("Failed to save user in the db: ", user.ToString())
+		}
+	}
+
+	// Now query for each user with username
+	for _, user := range validUsers {
+		found, err := FindWithUsername(user.Username)
+		if err != nil {
+			t.Error("Error encountered querying for user ", user.ToString())
+		}
+
+		t.Logf("Found user %s when querying for user %s", found.ToString(), user.ToString())
+		if reflect.DeepEqual(found, user) {
+			t.Error("Wrong user found when querying for user ", user.ToString())
+		}
+	}
+
+	// Now try querying with phonenumbers
+	for _, user := range validUsers {
+		found, err := FindWithPhonenumber(user.Phonenumber)
+		if err != nil {
+			t.Error("Error encountered querying for user ", user.ToString())
+		}
+
+		t.Logf("Found user %s when querying for user %s", found.ToString(), user.ToString())
+		if reflect.DeepEqual(found, user) {
+			t.Error("Wrong user found when querying for user ", user.ToString())
+		}
+	}
+
+	// Try querying with nonexistent username and phonenumber
+	if _, err := FindWithUsername("BillyBobNonExistent"); err == nil {
+		t.Error("No error encountered when querying for nonexistent user")
+	}
+	if _, err := FindWithPhonenumber("+1800NOTHERE"); err == nil {
+		t.Error("No error encountered when querying for nonexistent user")
+	}
+
+	for _, user := range validUsers {
+		removeUser(user)
 	}
 }

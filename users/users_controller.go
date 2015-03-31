@@ -64,6 +64,7 @@ func createUser(resp http.ResponseWriter, req *http.Request, sessions *sessions.
 
 // Takes the given phone number and converts it into a standardized form
 // Returns an error is the given number cannot be correctly converted
+// TODO: Figure this out lol
 func parsePhonenumber(phonenumber string) (string, error) {
 	return phonenumber, nil
 }
