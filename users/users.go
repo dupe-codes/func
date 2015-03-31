@@ -14,6 +14,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 
 	"github.com/njdup/func/db"
+	//"github.com/njdup/func/programs"
 	"github.com/njdup/func/utils/security"
 	"github.com/njdup/func/utils/web"
 )
@@ -29,6 +30,9 @@ type User struct {
 	Lastname     string `bson:"lastName" json:"lastName"`
 	Phonenumber  string `bson:"phoneNumber" json:"phoneNumber`
 	PasswordHash string `bson:"password" json:"-"`
+
+	// Store slice of ids for each program owned by the user
+	Programs []bson.ObjectId `bson:"programs" json:"-"`
 }
 
 var (
