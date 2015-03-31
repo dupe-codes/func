@@ -7,7 +7,7 @@ package db
 import (
 	"gopkg.in/mgo.v2"
 
-	"github.com/njdup/serve/settings"
+	"github.com/njdup/func/settings"
 )
 
 type queryFunc func(*mgo.Collection) error

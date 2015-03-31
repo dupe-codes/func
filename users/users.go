@@ -13,9 +13,9 @@ import (
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 
-	"github.com/njdup/serve/db"
-	"github.com/njdup/serve/utils/security"
-	"github.com/njdup/serve/utils/web"
+	"github.com/njdup/func/db"
+	"github.com/njdup/func/utils/security"
+	"github.com/njdup/func/utils/web"
 )
 
 // The User struct defines the database fields associated

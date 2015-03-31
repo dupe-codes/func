@@ -10,7 +10,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 
-	"github.com/njdup/serve/utils/web"
+	"github.com/njdup/func/utils/web"
 )
 
 func InitializeRoutes(router *mux.Router, sessionStore *sessions.CookieStore) {

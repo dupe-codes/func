@@ -33,7 +33,7 @@ type DbConfig struct {
 func getAppConfig() *AppConfig {
 	config := new(AppConfig)
 
-	config.Name = "Serve"
+	config.Name = "Func"
 	config.Port = ":8080"
 
 	return config
@@ -52,7 +52,7 @@ func getSecurityConfig() *SecurityConfig {
 func getDbConfig() *DbConfig {
 	config := new(DbConfig)
 	config.Url = "localhost"
-	config.Name = "serve-dev"
+	config.Name = "func-dev"
 
 	return config
 }

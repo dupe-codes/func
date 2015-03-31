@@ -9,8 +9,8 @@ import (
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 
-	"github.com/njdup/serve/db"
-	"github.com/njdup/serve/settings"
+	"github.com/njdup/func/db"
+	"github.com/njdup/func/settings"
 )
 
 // TODO: Add more test users, including malformed users

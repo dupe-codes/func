@@ -11,7 +11,7 @@
 *.prof
 
 # Ignore compiled project file
-serve
+func
 
 # Ignore testing relics
 *.out

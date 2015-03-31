@@ -1,6 +1,6 @@
 // This will eventually define the main logic
-// for the overall Serve server, which both exports
-// a RESTful API for creating Serve users and user
+// for the overall Func server, which both exports
+// a RESTful API for creating Func users and user
 // scripts, and handles processing incoming texts
 // + running desired commands for users
 
@@ -15,9 +15,9 @@ import (
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
 
-	"github.com/njdup/serve/settings"
-	"github.com/njdup/serve/site"
-	"github.com/njdup/serve/users"
+	"github.com/njdup/func/settings"
+	"github.com/njdup/func/site"
+	"github.com/njdup/func/users"
 )
 
 // configureRoutes will eventually initialize all application and API routes
