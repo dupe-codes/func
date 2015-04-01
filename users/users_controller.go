@@ -14,7 +14,8 @@ import (
 )
 
 func InitializeRoutes(router *mux.Router, sessionStore *sessions.CookieStore) {
-	router.Handle("/users", web.ConfigureHandler(createUser, sessionStore)).Methods("POST")
+	userCreation := web.ConfigureHandler(createUser, sessionStore, web.Options{})
+	router.Handle("/users", userCreation).Methods("POST")
 }
 
 // Creates a new user from received data

@@ -4,19 +4,33 @@
 package web
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gorilla/sessions"
 )
 
-type SessionedHandler func(http.ResponseWriter, *http.Request, *sessions.CookieStore)
+type Handler func(http.ResponseWriter, *http.Request, *sessions.CookieStore)
+
+// Exports the ability to configure options for a new handler
+// Available Options:
+// ReqLogin: Require an active session for accessing the handler
+type Options struct {
+	ReqLogin bool
+}
 
 // Configures the given function to be used as a request handler func
 // This can be expanded to handle any shared logic between all handler funcs
-func ConfigureHandler(fn SessionedHandler, sessionStore *sessions.CookieStore) http.HandlerFunc {
-	// TODO: Add flag to require user is logged in to access the page?
-	// Otherwise, redirect
+func ConfigureHandler(fn Handler, sessions *sessions.CookieStore, options Options) http.HandlerFunc {
 	return func(resp http.ResponseWriter, req *http.Request) {
-		fn(resp, req, sessionStore)
+		if options.ReqLogin {
+			session, _ := sessions.Get(req, "func-session")
+			_, ok := session.Values["user"]
+			if !ok {
+				http.Redirect(resp, req, "/login", http.StatusFound)
+				return
+			}
+		}
+		fn(resp, req, sessions)
 	}
 }

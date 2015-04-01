@@ -29,7 +29,18 @@ func signup(resp http.ResponseWriter, req *http.Request, sessions *sessions.Cook
 	})
 }
 
-func InitializeRoutes(router *mux.Router, sessionStore *sessions.CookieStore) {
-	router.Handle("/", HomePage(sessionStore)).Methods("GET")
-	router.Handle("/signup", web.ConfigureHandler(signup, sessionStore)).Methods("GET")
+func login(resp http.ResponseWriter, req *http.Request, sessions *sessions.CookieStore) {
+	RenderTemplate(resp, "login", pongo2.Context{
+		"title": "Func",
+	})
+}
+
+func InitializeRoutes(router *mux.Router, sessions *sessions.CookieStore) {
+	router.Handle("/", HomePage(sessions)).Methods("GET")
+
+	signupPage := web.ConfigureHandler(signup, sessions, web.Options{})
+	router.Handle("/signup", signupPage).Methods("GET")
+
+	loginPage := web.ConfigureHandler(login, sessions, web.Options{})
+	router.Handle("/login", loginPage).Methods("GET")
 }
