@@ -7,27 +7,26 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/flosch/pongo2"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 
 	"github.com/njdup/func/utils/web"
 )
 
-type Page struct {
-	Title string
-}
-
 func HomePage(sessionStore *sessions.CookieStore) http.Handler {
 	return http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 		fmt.Printf("Serving up main page.\n\n\n")
-		page := &Page{Title: "Func"}
-		RenderTemplate(res, "home", page)
+		RenderTemplate(res, "home", pongo2.Context{
+			"title": "Func",
+		})
 	})
 }
 
 func signup(resp http.ResponseWriter, req *http.Request, sessions *sessions.CookieStore) {
-	page := &Page{Title: "Signup"}
-	RenderTemplate(resp, "signup", page)
+	RenderTemplate(resp, "signup", pongo2.Context{
+		"title": "Func",
+	})
 }
 
 func InitializeRoutes(router *mux.Router, sessionStore *sessions.CookieStore) {

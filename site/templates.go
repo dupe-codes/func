@@ -4,11 +4,12 @@
 package site
 
 import (
-	"html/template"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/flosch/pongo2"
 )
 
 var (
@@ -21,10 +22,18 @@ var (
 // tmpl must be given as just the name of the template without the .tmpl file extension
 // Example:
 // RenderTemplate(resp, "home", data)
-func RenderTemplate(resp http.ResponseWriter, name string, tmplData interface{}) {
-	err := templates.ExecuteTemplate(resp, name+".tmpl", tmplData)
+func RenderTemplate(resp http.ResponseWriter, name string, tmplData pongo2.Context) {
+	tmpl, ok := templates[name+".html"]
+	if !ok {
+		// TODO: Better way of handling template search error - probably log and panic
+		http.Error(resp, "Unable to render template.", http.StatusInternalServerError)
+		return
+	}
+
+	// Now try writing out the template
+	err := tmpl.ExecuteWriter(tmplData, resp)
 	if err != nil {
-		http.Error(resp, "Error encountered generating page", http.StatusInternalServerError)
+		http.Error(resp, "Error encountered writing template", http.StatusInternalServerError)
 	}
 }
 
@@ -33,25 +42,22 @@ func RenderTemplate(resp http.ResponseWriter, name string, tmplData interface{})
  */
 
 // Walks through the templates directory and loads all template files for use
-func loadTemplates() *template.Template {
-	files := []string{}
+func loadTemplates() map[string]*pongo2.Template {
+	result := make(map[string]*pongo2.Template)
 	err := filepath.Walk(templatesDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
-		if strings.HasSuffix(path, ".tmpl") {
-			//_, err = result.ParseFiles(path)
-			files = append(files, path)
-			return err
+		if strings.HasSuffix(path, ".html") {
+			result[filepath.Base(path)] = pongo2.Must(pongo2.FromFile(path))
 		}
 		return nil
 	})
 
-	// If an error was generated while loading templates, the site won't
+	// if an error was generated while loading templates, the site won't
 	// function properly - so we panic and bring down the server
 	if err != nil {
 		panic(err)
 	}
-	result := template.Must(template.ParseFiles(files...))
 	return result
 }
