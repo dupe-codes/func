@@ -4,7 +4,6 @@
 package web
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gorilla/sessions"
