@@ -1,0 +1,6 @@
+# Ignore installed dependencies
+node_modules/
+public/lib
+
+# Node stude
+npm-debug.log
