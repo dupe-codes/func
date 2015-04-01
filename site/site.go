@@ -9,26 +9,12 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
+
+	"github.com/njdup/func/utils/web"
 )
 
 type Page struct {
 	Title string
-}
-
-// Test handler
-func AnotherPage(sessionStore *sessions.CookieStore) http.Handler {
-	return http.HandlerFunc(func(resp http.ResponseWriter, req *http.Request) {
-		page := &Page{Title: "Another page"}
-		RenderTemplate(resp, "test", page)
-	})
-}
-
-// Another test handler
-func SubdirPage(sessionStore *sessions.CookieStore) http.Handler {
-	return http.HandlerFunc(func(resp http.ResponseWriter, req *http.Request) {
-		page := &Page{Title: "subdir"}
-		RenderTemplate(resp, "subdir", page)
-	})
 }
 
 func HomePage(sessionStore *sessions.CookieStore) http.Handler {
@@ -39,8 +25,12 @@ func HomePage(sessionStore *sessions.CookieStore) http.Handler {
 	})
 }
 
+func signup(resp http.ResponseWriter, req *http.Request, sessions *sessions.CookieStore) {
+	page := &Page{Title: "Signup"}
+	RenderTemplate(resp, "signup", page)
+}
+
 func InitializeRoutes(router *mux.Router, sessionStore *sessions.CookieStore) {
 	router.Handle("/", HomePage(sessionStore)).Methods("GET")
-	router.Handle("/test", AnotherPage(sessionStore)).Methods("GET")
-	router.Handle("/test2", SubdirPage(sessionStore)).Methods("GET")
+	router.Handle("/signup", web.ConfigureHandler(signup, sessionStore)).Methods("GET")
 }
