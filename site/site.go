@@ -35,6 +35,14 @@ func login(resp http.ResponseWriter, req *http.Request, sessions *sessions.Cooki
 	})
 }
 
+// Configures handling of static files
+// NOTE: With this, all files in the public dir will be
+// accessible through HTTP requests - be sure to not put anything
+// private in there
+func setupFileServer(router *mux.Router) {
+	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./site/public/")))
+}
+
 func InitializeRoutes(router *mux.Router, sessions *sessions.CookieStore) {
 	router.Handle("/", HomePage(sessions)).Methods("GET")
 
@@ -43,4 +51,7 @@ func InitializeRoutes(router *mux.Router, sessions *sessions.CookieStore) {
 
 	loginPage := web.ConfigureHandler(login, sessions, web.Options{})
 	router.Handle("/login", loginPage).Methods("GET")
+
+	// Static file serving must be configured last
+	setupFileServer(router)
 }

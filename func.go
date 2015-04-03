@@ -26,6 +26,8 @@ import (
 // the app router and session store as params
 func configureRoutes(router *mux.Router, sessionStore *sessions.CookieStore) {
 	users.InitializeRoutes(router, sessionStore)
+
+	// Site routes must be the last initialized
 	site.InitializeRoutes(router, sessionStore)
 }
 

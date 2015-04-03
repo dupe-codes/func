@@ -1,5 +1,50 @@
 {% extends "../layouts/base.html" %}
 
+{% block title %}Signup{% endblock %}
+{% block header_scripts %}
+  <script src="/lib/jquery-form/jquery.form.js" type="text/javascript"></script>
+{% endblock %}
+
 {% block content %}
   <h1> Signup here for a {{ title }} account! </h1>
+
+  <form id="signup-form" action="/users" method="post" class="form-horizontal">
+    <label for="username">Username</label>
+    <input type="text" name="Username" id="username">
+    <br/>
+    <label for="firstname">First Name</label>
+    <input type="text" name="Firstname" id="firstname">
+    <br/>
+    <label for="lastname">Last Name</label>
+    <input type="text" name="Lastname" id="lastname">
+    <br/>
+    <label for="phonenumber">Phonenumber</label>
+    <input type="text" name="Phonenumber" id="phonenumber">
+    <br/>
+    <label for="password">Password</label>
+    <input type="password" name="Password" id="password">
+    <br/>
+
+    <input type="submit" value="Signup" />
+  </form>
+{% endblock %}
+
+{% block footer %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        console.log("The doc is ready!");
+        $('#signup-form').submit(function() {
+            console.log("submitting!");
+            $(this).ajaxSubmit({
+                error: function(jqXHR, statusTxt, errorThrown) {
+                    console.log("Error!");
+                },
+                success: function(data, statusTxt, jqXHR) {
+                    console.log("Success!");
+                }
+            });
+            return false;
+        });
+    });
+  </script>
 {% endblock %}

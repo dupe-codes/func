@@ -3,6 +3,7 @@
     "version": "0.1.0",
     "dependencies": {
         "bootstrap": "*",
-        "jquery": "*"
+        "jquery": "*",
+        "jquery-form": "*"
     }
 }
