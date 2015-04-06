@@ -1,5 +1,6 @@
 Func
 ----
+Expand the functionality of text messaging
 
 TODOs
 =====
