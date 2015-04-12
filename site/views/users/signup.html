@@ -32,15 +32,13 @@
 {% block footer %}
 <script type="text/javascript">
     $(document).ready(function() {
-        console.log("The doc is ready!");
         $('#signup-form').submit(function() {
-            console.log("submitting!");
             $(this).ajaxSubmit({
                 error: function(jqXHR, statusTxt, errorThrown) {
                     console.log("Error!");
                 },
                 success: function(data, statusTxt, jqXHR) {
-                    console.log("Success!");
+                    $(location).attr("href", "/login");
                 }
             });
             return false;
